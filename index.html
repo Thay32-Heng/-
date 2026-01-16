@@ -3,29 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ប្រវត្តិរូបសង្ខេបរបស់ខ្ញុំ</title>
+    <title>ក្រុមរបស់យើង (Our Team)</title>
     <style>
-        /* តុបតែងឱ្យរូបថតនៅកណ្តាល និងមានរាងមូល */
-        .profile-container {
-            text-align: center;
+        /* ១. កូដសម្រាប់ដាក់ Background Image */
+        body {
+            /* សំខាន់៖ ត្រូវមានរូបភាពឈ្មោះ 'background.jpg' នៅក្នុង Folder ជាមួយគ្នា */
+            /* បើអ្នកដាក់ឈ្មោះរូបផ្សេង សូមកែឈ្មោះត្រង់កន្លែងនេះ */
+            background-image: url('BigBackground.jpg');
+            
+            /* កូដធ្វើឱ្យរូបនៅពេញអេក្រង់ជានិច្ច មិនថាទូរស័ព្ទ ឬកុំព្យូទ័រ */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            
+            font-family: "Khmer OS Battambang", sans-serif;
+            margin: 0;
             padding: 20px;
         }
+
+        /* ចំណងជើងធំ */
+        .main-title {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 4px #000000; /* ដាក់ស្រមោលឱ្យអក្សរដាច់ច្បាស់ពី Background */
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        /* ២. ការតុបតែងប្រអប់កាត (Card) ទូទៅ */
+        .profile-card {
+            /* ពណ៌ស តែថ្លា ៨៥% ដើម្បីឱ្យឃើញ Background ខាងក្រោយ */
+            background-color: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(5px); /* ធ្វើឱ្យព្រាលខាងក្រោយកាតបន្តិច (Glassmorphism) */
+            
+            border-radius: 15px;
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .profile-card:hover {
+            transform: translateY(-10px);
+            background-color: rgba(255, 255, 255, 1); /* ពេលដាក់ Mouse ពីលើ ឱ្យវាសច្បាស់វិញ */
+        }
+
         .profile-img {
-            width: 150px;       /* កំណត់ទំហំរូប */
-            height: 150px;      /* កំណត់កម្ពស់ */
-            object-fit: cover;  /* កាត់រូបកុំឱ្យខូចទ្រង់ទ្រាយ */
-            border-radius: 50%; /* ធ្វើឱ្យរូបរាងមូល */
-            border: 3px solid #333; /* ដាក់គែមពណ៌ខ្មៅ */
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            font-size: 18px;
+            color: #333;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        p {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        /* ៣. ផ្នែកពិសេសសម្រាប់ Leader (Mean Rotha) */
+        .leader-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .leader-card {
+            width: 280px; 
+            border: 3px solid #FFD700; /* ពណ៌មាស */
+            background-color: rgba(255, 255, 255, 0.95); /* Leader ឱ្យច្បាស់ជាងគេ */
+            position: relative;
+        }
+        
+        /* បន្ថែមរូបមកុដ ឬផ្កាយនៅកាត Leader (ប្រើ CSS) */
+        .leader-card::after {
+            content: "👑";
+            font-size: 30px;
+            position: absolute;
+            top: -15px;
+            right: -10px;
+            transform: rotate(15deg);
+        }
+
+        .leader-card .profile-img {
+            width: 140px; 
+            height: 140px;
+            border-color: #FFD700;
+        }
+
+        /* ៤. ផ្នែកសម្រាប់សមាជិកផ្សេងទៀត */
+        .team-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="profile-container">
-        <img src="gg.jpg" alt="រូបថតរបស់ខ្ញុំ" class="profile-img">
-        
-        <h1>សួស្តី! ខ្ញុំឈ្មោះ Sem VatanakPanha</h1>
-        <p>អ្នកអភិវឌ្ឍន៍វេបសាយ (Web Developer)</p>
+    <h1 class="main-title">PRIME</h1>
+
+    <!-- Mean Rotha (Prime) -->
+    <div class="leader-section">
+        <div class="profile-card leader-card">
+            <img src="4.jpg" alt="Mean Rotha" class="profile-img">
+            <h1>Mean Rotha</h1>
+            <p style="color: #b8860b;">អាណាព្យាបាល (Prime)</p>
+        </div>
+    </div>
+
+    <!-- សមាជិកផ្សេងទៀត -->
+    <div class="team-grid">
+
+        <div class="profile-card">
+            <img src="gg.jpg" alt="Sem VatanakPanha" class="profile-img">
+            <h1>Sem VatanakPanha</h1>
+            <p>ខ្ញុំស្រឡាញ់គេម្នាក់ (Love Alone)</p>
+        </div>
+
+        <div class="profile-card">
+            <img src="1.jpg" alt="Heng SengThay" class="profile-img">
+            <h1>Heng SengThay</h1>
+            <p>ស្ដេចដេក (King Sleep)</p>
+        </div>
+
+        <div class="profile-card">
+            <img src="2.jpg" alt="Hak ChhayVann" class="profile-img">
+            <h1>Hak ChhayVann</h1>
+            <p>សិស្សពូកែ (Excellent Student)</p>
+        </div>
+
+        <div class="profile-card">
+            <img src="3.jpg" alt="You PhatYuth" class="profile-img">
+            <h1>You PhatYuth</h1>
+            <p>បុរសសប្បាយ (Chill Guys)</p>
+        </div>
+
+        <div class="profile-card">
+            <img src="5.jpg" alt="Heng VoreakPich" class="profile-img">
+            <h1>Heng VoreakPich</h1>
+            <p>ប្រុសស្អាតប្រចាំ (RUPP)</p>
+        </div>
+
+        <div class="profile-card">
+            <img src="6.jpg" alt="Mat Rosavy" class="profile-img">
+            <h1>Mat Rosavy</h1>
+            <p>បុរសកំសត់ (Sad Man)</p>
+        </div>
+
     </div>
 
 </body>
