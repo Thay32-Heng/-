@@ -11,6 +11,9 @@
     <!-- ២. នាំយក Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- ៣. នាំយក SweetAlert2 សម្រាប់ផ្ទាំងទស្សន៍ទាយ -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         :root {
             --primary-color: #e60073;
@@ -178,13 +181,14 @@
         }
 
         h1 { font-size: 22px; color: #2c3e50; margin: 10px 0; font-weight: 800; }
-        p { color: #555; font-size: 15px; margin: 0 0 20px 0; font-weight: bold; }
+        p { color: #555; font-size: 15px; margin: 0 0 15px 0; font-weight: bold; }
 
         /* Social Icons */
         .social-icons {
             display: flex;
             justify-content: center;
             gap: 12px;
+            margin-bottom: 15px; /* បន្ថែមគម្លាតខាងក្រោម */
         }
         .social-btn {
             width: 40px; height: 40px;
@@ -197,6 +201,39 @@
         .fb { background: #1877F2; }
         .tg { background: #229ED9; }
         .social-btn:hover { transform: scale(1.2) rotate(360deg); }
+
+        /* PREDICT BUTTON STYLE */
+        .predict-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Battambang', cursive;
+            font-size: 13px;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(230, 0, 115, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .predict-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, var(--gold), #ffbf00);
+            color: #333;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+        .predict-btn i {
+            animation: heartBeat 1.5s infinite;
+        }
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
 
         /* --- FUN FACTS COUNTER --- */
         .fun-facts {
@@ -299,27 +336,17 @@
         #scrollTopBtn:hover { background-color: #555; }
 
         @keyframes beat { to { transform: scale(1.3); } }
-
-        /* Mobile Responsive Timeline */
-        @media screen and (max-width: 600px) {
-            .timeline::after { left: 31px; }
-            .tl-container { width: 100%; padding-left: 70px; padding-right: 25px; }
-            .tl-container::after { left: 21px; }
-            .left::before, .right::before { left: 60px; border: medium solid white; border-width: 10px 10px 10px 0; border-color: transparent white transparent transparent; }
-            .left, .right { left: 0%; }
-            .main-title { font-size: 32px; }
-        }
     </style>
 </head>
 <body>
 
-    <!-- Background Particles (ចំណុចទី ១) -->
+    <!-- Background Particles -->
     <div id="particles-js"></div>
 
     <!-- Scroll To Top Button -->
     <button onclick="topFunction()" id="scrollTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 
-    <!-- Music Player (ចំណុចទី ៥) -->
+    <!-- Music Player -->
     <div class="music-player">
         <button class="play-btn" onclick="toggleMusic()">
             <i class="fas fa-play" id="playIcon"></i>
@@ -337,7 +364,7 @@
         <!-- Header -->
         <div class="header-container">
             <h1 class="main-title">PRIME SQUAD</h1>
-            <!-- Typing Effect (ចំណុចទី ២) -->
+            <!-- Typing Effect -->
             <div class="typing-text">
                 <span id="typewriter"></span>
             </div>
@@ -353,6 +380,9 @@
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/MeanRatha" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('Mean Rotha')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
         </div>
 
@@ -366,6 +396,9 @@
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/Santaigooo" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('Sem VatanakPanha')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
 
             <div class="profile-card">
@@ -376,6 +409,9 @@
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/ThePrince_32" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('Heng SengThay')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
 
             <div class="profile-card">
@@ -386,6 +422,9 @@
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('Hak ChhayVann')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
 
             <div class="profile-card">
@@ -396,6 +435,9 @@
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/im_cookedd" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('You PhatYuth')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
 
             <div class="profile-card">
@@ -406,6 +448,9 @@
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/voreakpichhhhhhh" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('Heng VoreakPich')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
 
             <div class="profile-card">
@@ -416,10 +461,13 @@
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/matrosavy" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('Mat Rosavy')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
         </div>
 
-        <!-- Fun Facts Counter (ចំណុចទី ៣) -->
+        <!-- Fun Facts Counter -->
         <div class="fun-facts">
             <div class="fact-box">
                 <h2 data-target="1">0</h2>
@@ -439,7 +487,7 @@
             </div>
         </div>
 
-        <!-- Memories Gallery (ចំណុចទី ៤) -->
+        <!-- Memories Gallery -->
         <div class="memories-section">
             <h2 class="section-title">Memories</h2>
             <div class="gallery-grid">
@@ -466,6 +514,8 @@
     <!-- Scripts for Effects -->
     <!-- Library សម្រាប់ Particles -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- Library សម្រាប់ Tilt Effect -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
     
     <script>
         // 1. Config Particles (គ្រាប់ពន្លឺខាងក្រោយ)
@@ -543,11 +593,13 @@
         let played = false;
         window.addEventListener('scroll', () => {
             const section = document.querySelector('.fun-facts');
-            const sectionPos = section.getBoundingClientRect().top;
-            const screenPos = window.innerHeight / 1.3;
-            if(sectionPos < screenPos && !played){
-                animateCounters();
-                played = true;
+            if (section) {
+                const sectionPos = section.getBoundingClientRect().top;
+                const screenPos = window.innerHeight / 1.3;
+                if(sectionPos < screenPos && !played){
+                    animateCounters();
+                    played = true;
+                }
             }
         });
 
@@ -586,12 +638,53 @@
         }
 
         // Initialize 3D Tilt
-        VanillaTilt.init(document.querySelectorAll(".profile-card"), {
-            max: 25,
-            speed: 400,
-            glare: true,
-            "max-glare": 0.5,
-        });
+        if (typeof VanillaTilt !== 'undefined') {
+            VanillaTilt.init(document.querySelectorAll(".profile-card"), {
+                max: 15, // Reduced max tilt for better usability
+                speed: 400,
+                glare: true,
+                "max-glare": 0.3, // Reduced glare
+            });
+        }
+
+        // --- NEW: PREDICT CRUSH FUNCTION ---
+        function predictCrush(name) {
+            // បញ្ជីឈ្មោះ Crush បែបកំប្លែងៗ (អាចកែបានតាមចិត្ត)
+            const predictions = [
+                "អ្នកកំពុងមើយ☺️🙈🫵",
+                "ឆ្ងាយដូចជើងមេឃជិតនៅចំពោះមុខ🤭😘😘😘",
+                "អ្នកកំពុងតែអាន🤓🤓",
+                "សង្សារគេ (Sad) 😢",          
+            ];
+
+            // រើសយកមួយដោយចៃដន្យ
+            const result = predictions[Math.floor(Math.random() * predictions.length)];
+
+            // បង្ហាញលទ្ធផលដោយប្រើ SweetAlert2
+            Swal.fire({
+                title: `<span style="color: #e60073; font-family: 'Moul', cursive;">💘 Crush របស់ ${name} គឺ...</span>`,
+                html: `<h2 style="color: #333; font-family: 'Battambang', cursive;">${result}</h2>`,
+                imageUrl: 'https://media.tenor.com/On7kvXhzml4AAAAj/love-hearts.gif', // រូប GIF បេះដូង
+                imageWidth: 200,
+                imageHeight: 200,
+                imageAlt: 'Heart image',
+                background: '#fff url("https://www.transparenttextures.com/patterns/stardust.png")',
+                backdrop: `
+                    rgba(0,0,123,0.4)
+                    url("https://media.tenor.com/On7kvXhzml4AAAAi/loading-heart.gif")
+                    left top
+                    no-repeat
+                `,
+                confirmButtonText: 'Wow! 😱',
+                confirmButtonColor: '#e60073',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            });
+        }
     </script>
 </body>
 </html>
