@@ -11,7 +11,10 @@
     <!-- ២. នាំយក Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- ៣. នាំយក Firebase (សម្រាប់ធ្វើ Online) -->
+    <!-- ៣. នាំយក SweetAlert2 (សម្រាប់ Predict Crush) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- ៤. នាំយក Firebase (សម្រាប់ Online Sticker) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
@@ -23,6 +26,7 @@
         }
 
         body {
+            /* សូមកែឈ្មោះរូបភាពត្រង់នេះ */
             background-image: url('BigBackground.jpg');
             background-size: cover;
             background-position: center;
@@ -113,6 +117,7 @@
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 1px solid rgba(255,255,255,0.6);
             position: relative;
+            overflow: visible; /* Changed to visible for stickers */
             opacity: 0;
             animation: fadeInUp 1s ease-out forwards;
         }
@@ -234,13 +239,14 @@
         }
 
         h1 { font-size: 22px; color: #2c3e50; margin: 10px 0; font-weight: 800; }
-        p { color: #555; font-size: 15px; margin: 0 0 20px 0; font-weight: bold; }
+        p { color: #555; font-size: 15px; margin: 0 0 15px 0; font-weight: bold; }
 
         /* Social Icons */
         .social-icons {
             display: flex;
             justify-content: center;
             gap: 12px;
+            margin-bottom: 15px;
         }
         .social-btn {
             width: 40px; height: 40px;
@@ -256,6 +262,39 @@
         .lk { background: #8e44ad; } 
 
         .social-btn:hover { transform: scale(1.2) rotate(360deg); }
+
+        /* PREDICT BUTTON STYLE */
+        .predict-btn {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Battambang', cursive;
+            font-size: 13px;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(230, 0, 115, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .predict-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, var(--gold), #ffbf00);
+            color: #333;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+        .predict-btn i {
+            animation: heartBeat 1.5s infinite;
+        }
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.3); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.3); }
+            70% { transform: scale(1); }
+        }
 
         /* --- FUN FACTS COUNTER --- */
         .fun-facts {
@@ -346,6 +385,7 @@
             .fun-facts { gap: 20px; }
             .leader-card { width: 90%; }
         }
+        /* Scroll Top Button */
         #scrollTopBtn {
             display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99;
             font-size: 18px; border: none; outline: none;
@@ -358,9 +398,13 @@
 </head>
 <body>
 
+    <!-- Background Particles -->
     <div id="particles-js"></div>
+
+    <!-- Scroll To Top Button -->
     <button onclick="topFunction()" id="scrollTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 
+    <!-- Music Player -->
     <div class="music-player">
         <button class="play-btn" onclick="toggleMusic()">
             <i class="fas fa-play" id="playIcon"></i>
@@ -368,14 +412,17 @@
         <div class="music-text">
             <span id="musicStatus">Play Music</span>
         </div>
+        <!-- ដាក់ File ចម្រៀងរបស់អ្នកនៅទីនេះ -->
         <audio id="bgMusic" loop>
             <source src="Voicy_Loud Moaning.mp3" type="audio/mpeg">
         </audio>
     </div>
 
     <div class="container">
+        <!-- Header -->
         <div class="header-container">
             <h1 class="main-title">PRIME SQUAD</h1>
+            <!-- Typing Effect -->
             <div class="typing-text">
                 <span id="typewriter"></span>
             </div>
@@ -384,26 +431,31 @@
         <!-- Leader Section -->
         <div class="leader-section">
             <div class="profile-card leader-card" id="card-0">
+                <!-- Sticker UI -->
                 <div class="sticker-container">
                     <img src="https://cdn-icons-png.flaticon.com/512/9408/9408166.png" class="fav-sticker" id="sticker-img-0" alt="Sticker">
                     <label for="upload-0" class="upload-btn" title="ប្តូរ Sticker"><i class="fas fa-camera"></i></label>
                     <input type="file" id="upload-0" accept="image/*" style="display: none;" onchange="handleStickerUpload(this, 'sticker-img-0')">
                 </div>
-                
+
                 <img src="4.jpg" alt="Mean Rotha" class="profile-img">
                 <h1>Mean Rotha</h1>
                 <p style="color: #b8860b;">អាណាព្យាបាល (Prime)</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/MeanRatha" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
-                    <!-- LINK ICON -->
                     <a href="https://www.google.com/" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
+                <!-- Predict Button -->
+                <button class="predict-btn" onclick="predictCrush('Mean Rotha')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
         </div>
 
         <!-- Team Members -->
         <div class="team-grid">
+            
             <!-- Member 1 -->
             <div class="profile-card" id="card-1">
                 <div class="sticker-container">
@@ -413,13 +465,15 @@
                 </div>
                 <img src="gg.jpg" alt="Sem VatanakPanha" class="profile-img">
                 <h1>Sem VatanakPanha</h1>
-                <p>Love Alone</p>
+                <p>ស្រឡាញ់គេម្នាក់ឯង​ (Love Alone)</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/Santaigooo" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
-                    <!-- LINK ICON -->
-                    <a href="https://www.xnxx.com/" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
+                    <a href="#" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('Sem VatanakPanha')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
 
             <!-- Member 2 -->
@@ -431,13 +485,15 @@
                 </div>
                 <img src="1.jpg" alt="Heng SengThay" class="profile-img">
                 <h1>Heng SengThay</h1>
-                <p>King Sleep</p>
+                <p>ស្ដេចដេក (King Sleep)</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/ThePrince_32" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
-                    <!-- LINK ICON -->
-                    <a href="https://love.com/" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
+                    <a href="#" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('Heng SengThay')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
 
             <!-- Member 3 -->
@@ -449,13 +505,15 @@
                 </div>
                 <img src="2.jpg" alt="Hak ChhayVann" class="profile-img">
                 <h1>Hak ChhayVann</h1>
-                <p>Excellent Student</p>
+                <p>សិស្សពូកែ (Excellent Student)</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
-                    <!-- LINK ICON -->
-                    <a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.facebook.com%2FAntiDrugDepartment%2Fposts%2F1-%25E1%259E%258F%25E1%259F%2592%25E1%259E%259A%25E1%259E%25BC%25E1%259E%259C%25E1%259E%2593%25E1%259E%25B7%25E1%259E%2599%25E1%259E%25B6%25E1%259E%2599%25E1%259E%2590%25E1%259E%25B6%25E1%259E%2591%25E1%259F%2581-%25E1%259E%2585%25E1%259F%2586%25E1%259E%2596%25E1%259F%2584%25E1%259F%2587%25E1%259E%2582%25E1%259F%2592%25E1%259E%259A%25E1%259E%25BF%25E1%259E%2584%25E1%259E%2589%25E1%259F%2580%25E1%259E%2593-2-%25E1%259E%2599%25E1%259E%25BB%25E1%259E%259C%25E1%259E%2587%25E1%259E%2593%25E1%259E%259B%25E1%259F%2592%25E1%259E%25A2-%25E1%259E%259A%25E1%259E%25BD%25E1%259E%2598%25E1%259E%2582%25E1%259F%2592%25E1%259E%2593%25E1%259E%25B6%25E1%259E%2582%25E1%259E%25B6%25E1%259F%2586%25E1%259E%2591%25E1%259F%2592%25E1%259E%259A-%25E1%259E%2580%25E1%259F%2586%25E1%259E%2585%25E1%259E%25B6%25E1%259E%258F%25E1%259F%258B%25E1%259E%2582%25E1%259F%2592%25E1%259E%259A%25E1%259E%25BF%25E1%259E%2584%25E1%259E%2589%25E1%259F%2580%25E1%259E%2593-3-%25E1%259E%2590%25E1%259F%2592%25E1%259E%2593%25E1%259E%25B6%25E1%259F%2586%25E1%259E%2589%25E1%259F%2580%2F1002687706494431%2F&psig=AOvVaw1pc1itrHFyLPfYZi3rrx44&ust=1768830928597000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMCrzuuelZIDFQAAAAAdAAAAABAE" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
+                    <a href="https://www.facebook.com/AntiDrugDepartment" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('Hak ChhayVann')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
 
             <!-- Member 4 -->
@@ -467,13 +525,15 @@
                 </div>
                 <img src="3.jpg" alt="You PhatYuth" class="profile-img">
                 <h1>You PhatYuth</h1>
-                <p>Chill Guys</p>
+                <p>បុរសសប្បាយ (Chill Guys)</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/im_cookedd" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
-                    <!-- LINK ICON -->
-                    <a href="https://www.pornhub.com/" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
+                    <a href="#" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('You PhatYuth')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
 
             <!-- Member 5 -->
@@ -485,13 +545,15 @@
                 </div>
                 <img src="5.jpg" alt="Heng VoreakPich" class="profile-img">
                 <h1>Heng VoreakPich</h1>
-                <p>RUPP Handsome</p>
+                <p>បុរសសង្ហាប្រចាំ RUPP Handsome</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/voreakpichhhhhhh" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
-                    <!-- LINK ICON -->
                     <a href="https://www.facebook.com/share/1AZwZvNv5L/?mibextid=wwXIfr" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('Heng VoreakPich')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
 
             <!-- Member 6 -->
@@ -503,28 +565,43 @@
                 </div>
                 <img src="6.jpg" alt="Mat Rosavy" class="profile-img">
                 <h1>Mat Rosavy</h1>
-                <p>Sad Man</p>
+                <p>បុរសសោកសៅ (Sad Man)</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/matrosavy" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
-                    <!-- LINK ICON -->
-                    <a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dm_XUClQCOUc&psig=AOvVaw1LHSwq9by4U0c4LiqvEJ-G&ust=1768831167192000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIDH1NyflZIDFQAAAAAdAAAAABAE" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
+                    <a href="https://www.youtube.com/watch?v=m_XUClQCOUc" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
+                <button class="predict-btn" onclick="predictCrush('Mat Rosavy')">
+                    <i class="fas fa-heart"></i> Predict Crush
+                </button>
             </div>
         </div>
 
-        <!-- Fun Facts -->
+        <!-- Fun Facts Counter -->
         <div class="fun-facts">
-            <div class="fact-box"><h2 data-target="1">0</h2><span>Years of Friendship</span></div>
-            <div class="fact-box"><h2 data-target="7">0</h2><span>Members</span></div>
-            <div class="fact-box"><h2 data-target="100">0</h2><span>Assignments Copied %</span></div>
-            <div class="fact-box"><h2 data-target="999">0</h2><span>Hours of Gaming</span></div>
+            <div class="fact-box">
+                <h2 data-target="1">0</h2>
+                <span>Years of Friendship</span>
+            </div>
+            <div class="fact-box">
+                <h2 data-target="7">0</h2>
+                <span>Members</span>
+            </div>
+            <div class="fact-box">
+                <h2 data-target="100">0</h2>
+                <span>Assignments Copied %</span>
+            </div>
+            <div class="fact-box">
+                <h2 data-target="999">0</h2>
+                <span>Hours of Gaming</span>
+            </div>
         </div>
 
-        <!-- Memories -->
+        <!-- Memories Gallery -->
         <div class="memories-section">
             <h2 class="section-title">Memories</h2>
             <div class="gallery-grid">
+                <!-- ជំនួសកន្លែងនេះដោយរូបថតក្រុម -->
                 <div class="gallery-item"><div class="placeholder-text"></div><img src="A.jpg"></div>
                 <div class="gallery-item"><div class="placeholder-text"></div><img src="B.jpg"></div>
                 <div class="gallery-item"><div class="placeholder-text"></div><img src="C.jpg"></div>
@@ -535,13 +612,16 @@
                 <div class="gallery-item"><div class="placeholder-text"></div><img src="H.jpg"></div>
             </div>
         </div>
+
     </div>
 
+    <!-- Footer -->
     <footer class="footer">
         <p>លុញពង <i class="fas fa-heart"></i> | RUPP Friendship</p>
         <p style="font-size: 20px; margin-top: 5px; opacity: 0.7;">© 2026 Prime Squad. All rights reserved.</p>
     </footer>
 
+    <!-- Scripts for Effects -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
     
@@ -677,9 +757,24 @@
         // Load Stickers on start
         window.addEventListener('load', loadStickers);
 
-        // --- EXISTING EFFECTS ---
-        particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "size": { "value": 3 } } });
-        
+        // --- EXISTING EFFECTS (Particles, Typing, etc.) ---
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": false },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
+                "move": { "enable": true, "speed": 3, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } }
+            },
+            "retina_detect": true
+        });
+
         const textElement = document.getElementById('typewriter');
         const phrases = ["លុញពង Forever", "អរគុណសន្ដិភាព"];
         let phraseIndex = 0, charIndex = 0, isDeleting = false;
@@ -695,28 +790,82 @@
 
         // Counter Animation
         const counters = document.querySelectorAll('.fact-box h2');
+        const speed = 200;
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const inc = target / speed;
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc);
+                        setTimeout(updateCount, 20);
+                    } else { counter.innerText = target; }
+                }
+                updateCount();
+            });
+        }
         let played = false;
         window.addEventListener('scroll', () => {
-            if(window.scrollY > 200 && !played){
-                counters.forEach(c => {
-                    const t = +c.getAttribute('data-target');
-                    c.innerText = t; // Simplify for demo
-                });
-                played = true;
+            const section = document.querySelector('.fun-facts');
+            if (section) {
+                const sectionPos = section.getBoundingClientRect().top;
+                const screenPos = window.innerHeight / 1.3;
+                if(sectionPos < screenPos && !played){ animateCounters(); played = true; }
             }
         });
 
         function toggleMusic() {
             const m = document.getElementById('bgMusic');
             const i = document.getElementById('playIcon');
-            if (m.paused) { m.play(); i.className = "fas fa-pause"; }
-            else { m.pause(); i.className = "fas fa-play"; }
+            const s = document.getElementById('musicStatus');
+            if (m.paused) { 
+                m.play().catch(e => alert("សូមដាក់ចម្រៀងឈ្មោះ 'Voicy_Loud Moaning.mp3' ចូលក្នុង Folder សិន!")); 
+                i.className = "fas fa-pause"; s.innerText = "Playing...";
+            } else { 
+                m.pause(); i.className = "fas fa-play"; s.innerText = "Paused";
+            }
         }
         
-        function topFunction() { window.scrollTo({top: 0, behavior: 'smooth'}); }
+        const mybutton = document.getElementById("scrollTopBtn");
+        window.onscroll = function() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) { mybutton.style.display = "block"; } 
+            else { mybutton.style.display = "none"; }
+            
+            // Re-trigger counter if needed
+            const section = document.querySelector('.fun-facts');
+            if (section) {
+                const sectionPos = section.getBoundingClientRect().top;
+                const screenPos = window.innerHeight / 1.3;
+                if(sectionPos < screenPos && !played){ animateCounters(); played = true; }
+            }
+        };
+        function topFunction() { document.body.scrollTop = 0; document.documentElement.scrollTop = 0; }
 
         if (typeof VanillaTilt !== 'undefined') {
-             VanillaTilt.init(document.querySelectorAll(".profile-card"), { max: 15, speed: 400 });
+             VanillaTilt.init(document.querySelectorAll(".profile-card"), { max: 15, speed: 400, glare: true, "max-glare": 0.3 });
+        }
+
+        // --- PREDICT CRUSH FUNCTION ---
+        function predictCrush(name) {
+            const predictions = [
+            "អ្នកកំពុងមើល ☺️🙈🫵", 
+            "ឆ្ងាយដូចជើងមេឃជិតនៅចំពោះមុខ​ 🤭😘😘😘",
+            "អ្នកកំពុងតែអាន 🤓🤓", 
+            ];
+            const result = predictions[Math.floor(Math.random() * predictions.length)];
+            Swal.fire({
+                title: `<span style="color: #e60073; font-family: 'Moul', cursive;">💘 Crush របស់ ${name} គឺ...</span>`,
+                html: `<h2 style="color: #333; font-family: 'Battambang', cursive;">${result}</h2>`,
+                imageUrl: 'https://media.tenor.com/On7kvXhzml4AAAAj/love-hearts.gif',
+                imageWidth: 200, imageHeight: 200, imageAlt: 'Heart image',
+                background: '#fff url("https://www.transparenttextures.com/patterns/stardust.png")',
+                backdrop: `rgba(0,0,123,0.4) url("https://media.tenor.com/On7kvXhzml4AAAAi/loading-heart.gif") left top no-repeat`,
+                confirmButtonText: 'ចុយ? 😱',
+                confirmButtonColor: '#e60073',
+                showClass: { popup: 'animate__animated animate__fadeInDown' },
+                hideClass: { popup: 'animate__animated animate__fadeOutUp' }
+            });
         }
     </script>
 </body>
