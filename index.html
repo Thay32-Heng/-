@@ -11,8 +11,9 @@
     <!-- ២. នាំយក Icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- ៣. នាំយក SweetAlert2 សម្រាប់ផ្ទាំងទស្សន៍ទាយ -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- ៣. នាំយក Firebase (សម្រាប់ធ្វើ Online) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
     <style>
         :root {
@@ -22,7 +23,6 @@
         }
 
         body {
-            /* សូមកែឈ្មោះរូបភាពត្រង់នេះ */
             background-image: url('BigBackground.jpg');
             background-size: cover;
             background-position: center;
@@ -34,17 +34,16 @@
             padding: 0;
             min-height: 100vh;
             color: #333;
-            overflow-x: hidden; /* ការពារកុំឱ្យរមូរទៅឆ្វេងស្តាំ */
+            overflow-x: hidden;
         }
 
-        /* ផ្ទាំងគ្របពីលើ Background ដើម្បីឱ្យមើលឃើញអក្សរច្បាស់ និងដាក់ Particles */
         #particles-js {
             position: fixed;
             width: 100%;
             height: 100%;
             top: 0;
             left: 0;
-            background-color: rgba(0, 0, 0, 0.4); /* ធ្វើឱ្យរូប Background ងងឹតបន្តិច */
+            background-color: rgba(0, 0, 0, 0.4);
             z-index: -1;
         }
 
@@ -62,7 +61,7 @@
             font-size: 52px;
             font-weight: bold;
             letter-spacing: 4px;
-            font-family: 'Moul', cursive; /* ប្រើ Font មូលសម្រាប់ចំណងជើង */
+            font-family: 'Moul', cursive;
             text-transform: uppercase;
             animation: glow 2s ease-in-out infinite alternate;
         }
@@ -111,12 +110,66 @@
             width: 280px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy effect */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 1px solid rgba(255,255,255,0.6);
             position: relative;
-            overflow: hidden;
             opacity: 0;
             animation: fadeInUp 1s ease-out forwards;
+        }
+
+        /* --- STICKER STYLES --- */
+        .sticker-container {
+            position: absolute;
+            top: -30px;
+            right: -20px;
+            width: 80px;
+            height: 80px;
+            z-index: 20;
+        }
+
+        .fav-sticker {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0;
+            transform: scale(0) rotate(-45deg);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+            pointer-events: none;
+        }
+
+        .upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--gold);
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: 0.3s;
+            z-index: 25;
+        }
+
+        .upload-btn:hover {
+            background: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .profile-card:hover .fav-sticker {
+            opacity: 1;
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .profile-card:hover .upload-btn {
+            opacity: 1;
         }
 
         /* Staggered Animation */
@@ -181,14 +234,13 @@
         }
 
         h1 { font-size: 22px; color: #2c3e50; margin: 10px 0; font-weight: 800; }
-        p { color: #555; font-size: 15px; margin: 0 0 15px 0; font-weight: bold; }
+        p { color: #555; font-size: 15px; margin: 0 0 20px 0; font-weight: bold; }
 
         /* Social Icons */
         .social-icons {
             display: flex;
             justify-content: center;
             gap: 12px;
-            margin-bottom: 15px; /* បន្ថែមគម្លាតខាងក្រោម */
         }
         .social-btn {
             width: 40px; height: 40px;
@@ -200,40 +252,10 @@
         }
         .fb { background: #1877F2; }
         .tg { background: #229ED9; }
-        .social-btn:hover { transform: scale(1.2) rotate(360deg); }
+        /* បន្ថែមពណ៌សម្រាប់ប៊ូតុង Link */
+        .lk { background: #8e44ad; } 
 
-        /* PREDICT BUTTON STYLE */
-        .predict-btn {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: 'Battambang', cursive;
-            font-size: 13px;
-            transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(230, 0, 115, 0.3);
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .predict-btn:hover {
-            transform: scale(1.05);
-            background: linear-gradient(45deg, var(--gold), #ffbf00);
-            color: #333;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
-        }
-        .predict-btn i {
-            animation: heartBeat 1.5s infinite;
-        }
-        @keyframes heartBeat {
-            0% { transform: scale(1); }
-            14% { transform: scale(1.3); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.3); }
-            70% { transform: scale(1); }
-        }
+        .social-btn:hover { transform: scale(1.2) rotate(360deg); }
 
         /* --- FUN FACTS COUNTER --- */
         .fun-facts {
@@ -283,7 +305,6 @@
             transition: 0.5s;
         }
         .gallery-item:hover img { transform: scale(1.1); }
-        /* Placeholder សម្រាប់រូបភាព Gallery */
         .placeholder-text {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
@@ -325,7 +346,6 @@
             .fun-facts { gap: 20px; }
             .leader-card { width: 90%; }
         }
-        /* Scroll Top Button */
         #scrollTopBtn {
             display: none; position: fixed; bottom: 20px; right: 20px; z-index: 99;
             font-size: 18px; border: none; outline: none;
@@ -334,19 +354,13 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         #scrollTopBtn:hover { background-color: #555; }
-
-        @keyframes beat { to { transform: scale(1.3); } }
     </style>
 </head>
 <body>
 
-    <!-- Background Particles -->
     <div id="particles-js"></div>
-
-    <!-- Scroll To Top Button -->
     <button onclick="topFunction()" id="scrollTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 
-    <!-- Music Player -->
     <div class="music-player">
         <button class="play-btn" onclick="toggleMusic()">
             <i class="fas fa-play" id="playIcon"></i>
@@ -354,17 +368,14 @@
         <div class="music-text">
             <span id="musicStatus">Play Music</span>
         </div>
-        <!-- ដាក់ File ចម្រៀងរបស់អ្នកនៅទីនេះ -->
         <audio id="bgMusic" loop>
             <source src="Voicy_Loud Moaning.mp3" type="audio/mpeg">
         </audio>
     </div>
 
     <div class="container">
-        <!-- Header -->
         <div class="header-container">
             <h1 class="main-title">PRIME SQUAD</h1>
-            <!-- Typing Effect -->
             <div class="typing-text">
                 <span id="typewriter"></span>
             </div>
@@ -372,126 +383,148 @@
 
         <!-- Leader Section -->
         <div class="leader-section">
-            <div class="profile-card leader-card">
+            <div class="profile-card leader-card" id="card-0">
+                <div class="sticker-container">
+                    <img src="https://cdn-icons-png.flaticon.com/512/9408/9408166.png" class="fav-sticker" id="sticker-img-0" alt="Sticker">
+                    <label for="upload-0" class="upload-btn" title="ប្តូរ Sticker"><i class="fas fa-camera"></i></label>
+                    <input type="file" id="upload-0" accept="image/*" style="display: none;" onchange="handleStickerUpload(this, 'sticker-img-0')">
+                </div>
+                
                 <img src="4.jpg" alt="Mean Rotha" class="profile-img">
                 <h1>Mean Rotha</h1>
                 <p style="color: #b8860b;">អាណាព្យាបាល (Prime)</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/MeanRatha" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
+                    <!-- LINK ICON -->
+                    <a href="https://www.google.com/" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
-                <button class="predict-btn" onclick="predictCrush('Mean Rotha')">
-                    <i class="fas fa-heart"></i> Predict Crush
-                </button>
             </div>
         </div>
 
         <!-- Team Members -->
         <div class="team-grid">
-            <div class="profile-card">
+            <!-- Member 1 -->
+            <div class="profile-card" id="card-1">
+                <div class="sticker-container">
+                    <img src="https://cdn-icons-png.flaticon.com/512/742/742751.png" class="fav-sticker" id="sticker-img-1" alt="Sticker">
+                    <label for="upload-1" class="upload-btn" title="ប្តូរ Sticker"><i class="fas fa-camera"></i></label>
+                    <input type="file" id="upload-1" accept="image/*" style="display: none;" onchange="handleStickerUpload(this, 'sticker-img-1')">
+                </div>
                 <img src="gg.jpg" alt="Sem VatanakPanha" class="profile-img">
                 <h1>Sem VatanakPanha</h1>
-                <p>ខ្ញុំស្រឡាញ់គេម្នាក់ (Love Alone)</p>
+                <p>Love Alone</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/Santaigooo" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
+                    <!-- LINK ICON -->
+                    <a href="https://www.xnxx.com/" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
-                <button class="predict-btn" onclick="predictCrush('Sem VatanakPanha')">
-                    <i class="fas fa-heart"></i> Predict Crush
-                </button>
             </div>
 
-            <div class="profile-card">
+            <!-- Member 2 -->
+            <div class="profile-card" id="card-2">
+                <div class="sticker-container">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712100.png" class="fav-sticker" id="sticker-img-2" alt="Sticker">
+                    <label for="upload-2" class="upload-btn" title="ប្តូរ Sticker"><i class="fas fa-camera"></i></label>
+                    <input type="file" id="upload-2" accept="image/*" style="display: none;" onchange="handleStickerUpload(this, 'sticker-img-2')">
+                </div>
                 <img src="1.jpg" alt="Heng SengThay" class="profile-img">
                 <h1>Heng SengThay</h1>
-                <p>ស្ដេចដេក (King Sleep)</p>
+                <p>King Sleep</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/ThePrince_32" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
+                    <!-- LINK ICON -->
+                    <a href="https://love.com/" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
-                <button class="predict-btn" onclick="predictCrush('Heng SengThay')">
-                    <i class="fas fa-heart"></i> Predict Crush
-                </button>
             </div>
 
-            <div class="profile-card">
+            <!-- Member 3 -->
+            <div class="profile-card" id="card-3">
+                <div class="sticker-container">
+                    <img src="https://cdn-icons-png.flaticon.com/512/9408/9408201.png" class="fav-sticker" id="sticker-img-3" alt="Sticker">
+                    <label for="upload-3" class="upload-btn" title="ប្តូរ Sticker"><i class="fas fa-camera"></i></label>
+                    <input type="file" id="upload-3" accept="image/*" style="display: none;" onchange="handleStickerUpload(this, 'sticker-img-3')">
+                </div>
                 <img src="2.jpg" alt="Hak ChhayVann" class="profile-img">
                 <h1>Hak ChhayVann</h1>
-                <p>សិស្សពូកែ (Excellent Student)</p>
+                <p>Excellent Student</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
+                    <!-- LINK ICON -->
+                    <a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.facebook.com%2FAntiDrugDepartment%2Fposts%2F1-%25E1%259E%258F%25E1%259F%2592%25E1%259E%259A%25E1%259E%25BC%25E1%259E%259C%25E1%259E%2593%25E1%259E%25B7%25E1%259E%2599%25E1%259E%25B6%25E1%259E%2599%25E1%259E%2590%25E1%259E%25B6%25E1%259E%2591%25E1%259F%2581-%25E1%259E%2585%25E1%259F%2586%25E1%259E%2596%25E1%259F%2584%25E1%259F%2587%25E1%259E%2582%25E1%259F%2592%25E1%259E%259A%25E1%259E%25BF%25E1%259E%2584%25E1%259E%2589%25E1%259F%2580%25E1%259E%2593-2-%25E1%259E%2599%25E1%259E%25BB%25E1%259E%259C%25E1%259E%2587%25E1%259E%2593%25E1%259E%259B%25E1%259F%2592%25E1%259E%25A2-%25E1%259E%259A%25E1%259E%25BD%25E1%259E%2598%25E1%259E%2582%25E1%259F%2592%25E1%259E%2593%25E1%259E%25B6%25E1%259E%2582%25E1%259E%25B6%25E1%259F%2586%25E1%259E%2591%25E1%259F%2592%25E1%259E%259A-%25E1%259E%2580%25E1%259F%2586%25E1%259E%2585%25E1%259E%25B6%25E1%259E%258F%25E1%259F%258B%25E1%259E%2582%25E1%259F%2592%25E1%259E%259A%25E1%259E%25BF%25E1%259E%2584%25E1%259E%2589%25E1%259F%2580%25E1%259E%2593-3-%25E1%259E%2590%25E1%259F%2592%25E1%259E%2593%25E1%259E%25B6%25E1%259F%2586%25E1%259E%2589%25E1%259F%2580%2F1002687706494431%2F&psig=AOvVaw1pc1itrHFyLPfYZi3rrx44&ust=1768830928597000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMCrzuuelZIDFQAAAAAdAAAAABAE" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
-                <button class="predict-btn" onclick="predictCrush('Hak ChhayVann')">
-                    <i class="fas fa-heart"></i> Predict Crush
-                </button>
             </div>
 
-            <div class="profile-card">
+            <!-- Member 4 -->
+            <div class="profile-card" id="card-4">
+                <div class="sticker-container">
+                    <img src="https://cdn-icons-png.flaticon.com/512/927/927567.png" class="fav-sticker" id="sticker-img-4" alt="Sticker">
+                    <label for="upload-4" class="upload-btn" title="ប្តូរ Sticker"><i class="fas fa-camera"></i></label>
+                    <input type="file" id="upload-4" accept="image/*" style="display: none;" onchange="handleStickerUpload(this, 'sticker-img-4')">
+                </div>
                 <img src="3.jpg" alt="You PhatYuth" class="profile-img">
                 <h1>You PhatYuth</h1>
-                <p>បុរសសប្បាយ (Chill Guys)</p>
+                <p>Chill Guys</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/im_cookedd" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
+                    <!-- LINK ICON -->
+                    <a href="https://www.pornhub.com/" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
-                <button class="predict-btn" onclick="predictCrush('You PhatYuth')">
-                    <i class="fas fa-heart"></i> Predict Crush
-                </button>
             </div>
 
-            <div class="profile-card">
+            <!-- Member 5 -->
+            <div class="profile-card" id="card-5">
+                <div class="sticker-container">
+                    <img src="https://cdn-icons-png.flaticon.com/512/9408/9408170.png" class="fav-sticker" id="sticker-img-5" alt="Sticker">
+                    <label for="upload-5" class="upload-btn" title="ប្តូរ Sticker"><i class="fas fa-camera"></i></label>
+                    <input type="file" id="upload-5" accept="image/*" style="display: none;" onchange="handleStickerUpload(this, 'sticker-img-5')">
+                </div>
                 <img src="5.jpg" alt="Heng VoreakPich" class="profile-img">
                 <h1>Heng VoreakPich</h1>
-                <p>ប្រុសស្អាតប្រចាំ (RUPP)</p>
+                <p>RUPP Handsome</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/voreakpichhhhhhh" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
+                    <!-- LINK ICON -->
+                    <a href="https://www.facebook.com/share/1AZwZvNv5L/?mibextid=wwXIfr" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
-                <button class="predict-btn" onclick="predictCrush('Heng VoreakPich')">
-                    <i class="fas fa-heart"></i> Predict Crush
-                </button>
             </div>
 
-            <div class="profile-card">
+            <!-- Member 6 -->
+            <div class="profile-card" id="card-6">
+                <div class="sticker-container">
+                    <img src="https://cdn-icons-png.flaticon.com/512/9408/9408223.png" class="fav-sticker" id="sticker-img-6" alt="Sticker">
+                    <label for="upload-6" class="upload-btn" title="ប្តូរ Sticker"><i class="fas fa-camera"></i></label>
+                    <input type="file" id="upload-6" accept="image/*" style="display: none;" onchange="handleStickerUpload(this, 'sticker-img-6')">
+                </div>
                 <img src="6.jpg" alt="Mat Rosavy" class="profile-img">
                 <h1>Mat Rosavy</h1>
-                <p>បុរសកំសត់ (Sad Man)</p>
+                <p>Sad Man</p>
                 <div class="social-icons">
                     <a href="#" class="social-btn fb"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://t.me/matrosavy" class="social-btn tg"><i class="fab fa-telegram-plane"></i></a>
+                    <!-- LINK ICON -->
+                    <a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dm_XUClQCOUc&psig=AOvVaw1LHSwq9by4U0c4LiqvEJ-G&ust=1768831167192000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIDH1NyflZIDFQAAAAAdAAAAABAE" target="_blank" class="social-btn lk"><i class="fas fa-link"></i></a>
                 </div>
-                <button class="predict-btn" onclick="predictCrush('Mat Rosavy')">
-                    <i class="fas fa-heart"></i> Predict Crush
-                </button>
             </div>
         </div>
 
-        <!-- Fun Facts Counter -->
+        <!-- Fun Facts -->
         <div class="fun-facts">
-            <div class="fact-box">
-                <h2 data-target="1">0</h2>
-                <span>Years of Friendship</span>
-            </div>
-            <div class="fact-box">
-                <h2 data-target="7">0</h2>
-                <span>Members</span>
-            </div>
-            <div class="fact-box">
-                <h2 data-target="100">0</h2>
-                <span>Assignments Copied %</span>
-            </div>
-            <div class="fact-box">
-                <h2 data-target="999">0</h2>
-                <span>Hours of Gaming</span>
-            </div>
+            <div class="fact-box"><h2 data-target="1">0</h2><span>Years of Friendship</span></div>
+            <div class="fact-box"><h2 data-target="7">0</h2><span>Members</span></div>
+            <div class="fact-box"><h2 data-target="100">0</h2><span>Assignments Copied %</span></div>
+            <div class="fact-box"><h2 data-target="999">0</h2><span>Hours of Gaming</span></div>
         </div>
 
-        <!-- Memories Gallery -->
+        <!-- Memories -->
         <div class="memories-section">
             <h2 class="section-title">Memories</h2>
             <div class="gallery-grid">
-                <!-- ជំនួសកន្លែងនេះដោយរូបថតក្រុម -->
                 <div class="gallery-item"><div class="placeholder-text"></div><img src="A.jpg"></div>
                 <div class="gallery-item"><div class="placeholder-text"></div><img src="B.jpg"></div>
                 <div class="gallery-item"><div class="placeholder-text"></div><img src="C.jpg"></div>
@@ -502,188 +535,188 @@
                 <div class="gallery-item"><div class="placeholder-text"></div><img src="H.jpg"></div>
             </div>
         </div>
-
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <p>លុញពង <i class="fas fa-heart"></i> | RUPP Friendship</p>
         <p style="font-size: 20px; margin-top: 5px; opacity: 0.7;">© 2026 Prime Squad. All rights reserved.</p>
     </footer>
 
-    <!-- Scripts for Effects -->
-    <!-- Library សម្រាប់ Particles -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <!-- Library សម្រាប់ Tilt Effect -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
     
     <script>
-        // 1. Config Particles (គ្រាប់ពន្លឺខាងក្រោយ)
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#ffffff" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.5, "random": false },
-                "size": { "value": 3, "random": true },
-                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
-                "move": { "enable": true, "speed": 3, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } }
-            },
-            "retina_detect": true
-        });
+        // --- CONFIGURATION ZONE (កន្លែងកំណត់) ---
+        // ដើម្បីឱ្យ Online បាន, សូមទៅកាន់ firebase.google.com -> Create Project -> Add Web App
+        // បន្ទាប់មក Copy "firebaseConfig" មកដាក់ជំនួសកន្លែងខាងក្រោមនេះ៖
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyA7zXLnBzWwC16xDkQeYZAc_uuBTjY3S5w",
+            authDomain: "prime-squad-kh.firebaseapp.com",
+            projectId: "prime-squad-kh",
+            storageBucket: "prime-squad-kh.firebasestorage.app",
+            messagingSenderId: "256981462004",
+            appId: "1:256981462004:web:5eeca03354dac9580b67a1",
+            measurementId: "G-R862YB63VP"
+        };
 
-        // 2. Typing Effect (អក្សរវាយ)
+        // --- SYSTEM LOGIC (កុំកែត្រង់នេះ) ---
+        let db = null;
+        let isOnline = false;
+
+        // Initialize Firebase if config is present
+        if (firebaseConfig.apiKey) {
+            try {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                isOnline = true;
+                console.log("Firebase Connected! Using Cloud Database.");
+            } catch (e) {
+                console.error("Firebase init error:", e);
+                alert("Firebase Config មិនត្រឹមត្រូវ។ នឹងប្រើប្រាស់ LocalStorage ជំនួសវិញ។");
+            }
+        } else {
+            console.log("No Firebase Config found. Using LocalStorage.");
+        }
+
+        // --- IMAGE HANDLING & COMPRESSION ---
+        // យើងត្រូវបង្រួមរូបភាពមុននឹង Save ទៅ Database (ព្រោះ Database ឥតគិតថ្លៃមានកំណត់ទំហំ)
+        function handleStickerUpload(input, imgId) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    
+                    img.onload = function() {
+                        // បង្រួមរូបភាពមកត្រឹម 150px
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const maxWidth = 150;
+                        const scaleSize = maxWidth / img.width;
+                        canvas.width = maxWidth;
+                        canvas.height = img.height * scaleSize;
+
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        
+                        // បម្លែងទៅជាអក្សរ (Base64 String)
+                        const compressedDataUrl = canvas.toDataURL('image/png', 0.7); 
+
+                        // 1. បង្ហាញរូបភ្លាមៗ
+                        const imgElement = document.getElementById(imgId);
+                        if(imgElement) imgElement.src = compressedDataUrl;
+
+                        // 2. Save Data (Online ឬ Local)
+                        saveStickerData(imgId, compressedDataUrl);
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveStickerData(stickerId, dataUrl) {
+            if (isOnline && db) {
+                // Save to Cloud (Firebase)
+                // យើងបង្កើត Collection ឈ្មោះ 'stickers' និង Document ឈ្មោះ stickerId
+                db.collection("stickers").doc(stickerId).set({
+                    image: dataUrl,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                    console.log("Document successfully written to Cloud!");
+                })
+                .catch((error) => {
+                    console.error("Error writing document: ", error);
+                    alert("មានបញ្ហាក្នុងការ Save ទៅ Cloud! (ពិនិត្យមើល Console)");
+                });
+            } else {
+                // Save to LocalStorage
+                try {
+                    localStorage.setItem('prime_squad_' + stickerId, dataUrl);
+                } catch (err) {
+                    alert("Storage ពេញហើយ! រូបភាពនេះធំពេក។");
+                }
+            }
+        }
+
+        function loadStickers() {
+            const stickerIds = ['sticker-img-0', 'sticker-img-1', 'sticker-img-2', 'sticker-img-3', 'sticker-img-4', 'sticker-img-5', 'sticker-img-6'];
+
+            if (isOnline && db) {
+                // Load from Cloud (Real-time Listener)
+                // នេះគឺជាចំណុចពិសេស! ពេលនរណាម្នាក់ប្តូរ អ្នកផ្សេងនឹងឃើញប្តូរតាមភ្លាមៗ (Real-time)
+                db.collection("stickers").onSnapshot((snapshot) => {
+                    snapshot.docChanges().forEach((change) => {
+                        if (change.type === "added" || change.type === "modified") {
+                            const data = change.doc.data();
+                            const imgId = change.doc.id;
+                            const imgElement = document.getElementById(imgId);
+                            if (imgElement && data.image) {
+                                imgElement.src = data.image;
+                                // ធ្វើចលនាលោតបន្តិចពេលមានការផ្លាស់ប្តូរ
+                                imgElement.style.transform = "scale(1.5) rotate(10deg)";
+                                setTimeout(() => imgElement.style.transform = "", 500);
+                            }
+                        }
+                    });
+                });
+            } else {
+                // Load from LocalStorage
+                stickerIds.forEach(id => {
+                    const saved = localStorage.getItem('prime_squad_' + id);
+                    if (saved) {
+                        const el = document.getElementById(id);
+                        if(el) el.src = saved;
+                    }
+                });
+            }
+        }
+
+        // Load Stickers on start
+        window.addEventListener('load', loadStickers);
+
+        // --- EXISTING EFFECTS ---
+        particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "size": { "value": 3 } } });
+        
         const textElement = document.getElementById('typewriter');
-        const phrases = ["លុញពង Forever","អរគុណសន្ដិភាព"];
-        let phraseIndex = 0;
-        let charIndex = 0;
-        let isDeleting = false;
-
+        const phrases = ["លុញពង Forever", "អរគុណសន្ដិភាព"];
+        let phraseIndex = 0, charIndex = 0, isDeleting = false;
         function type() {
-            const currentPhrase = phrases[phraseIndex];
-            
-            if (isDeleting) {
-                textElement.textContent = currentPhrase.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                textElement.textContent = currentPhrase.substring(0, charIndex + 1);
-                charIndex++;
-            }
-
-            if (!isDeleting && charIndex === currentPhrase.length) {
-                isDeleting = true;
-                setTimeout(type, 2000); // ឈប់ ២វិនាទី មុននឹងលុបវិញ
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                phraseIndex = (phraseIndex + 1) % phrases.length;
-                setTimeout(type, 500);
-            } else {
-                setTimeout(type, isDeleting ? 50 : 100);
-            }
+            const current = phrases[phraseIndex];
+            if (isDeleting) { textElement.textContent = current.substring(0, charIndex - 1); charIndex--; }
+            else { textElement.textContent = current.substring(0, charIndex + 1); charIndex++; }
+            if (!isDeleting && charIndex === current.length) { isDeleting = true; setTimeout(type, 2000); }
+            else if (isDeleting && charIndex === 0) { isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; setTimeout(type, 500); }
+            else { setTimeout(type, isDeleting ? 50 : 100); }
         }
         document.addEventListener('DOMContentLoaded', type);
 
-        // 3. Counter Animation (រាប់លេខ)
+        // Counter Animation
         const counters = document.querySelectorAll('.fact-box h2');
-        const speed = 200;
-
-        const animateCounters = () => {
-            counters.forEach(counter => {
-                const updateCount = () => {
-                    const target = +counter.getAttribute('data-target');
-                    const count = +counter.innerText;
-                    const inc = target / speed;
-
-                    if (count < target) {
-                        counter.innerText = Math.ceil(count + inc);
-                        setTimeout(updateCount, 20);
-                    } else {
-                        counter.innerText = target;
-                    }
-                }
-                updateCount();
-            });
-        }
-
-        // ឱ្យវារាប់តែពេលអូសមកដល់ប៉ុណ្ណោះ
         let played = false;
         window.addEventListener('scroll', () => {
-            const section = document.querySelector('.fun-facts');
-            if (section) {
-                const sectionPos = section.getBoundingClientRect().top;
-                const screenPos = window.innerHeight / 1.3;
-                if(sectionPos < screenPos && !played){
-                    animateCounters();
-                    played = true;
-                }
+            if(window.scrollY > 200 && !played){
+                counters.forEach(c => {
+                    const t = +c.getAttribute('data-target');
+                    c.innerText = t; // Simplify for demo
+                });
+                played = true;
             }
         });
 
-        // 4. Music Player Control
         function toggleMusic() {
-            const music = document.getElementById('bgMusic');
-            const icon = document.getElementById('playIcon');
-            const status = document.getElementById('musicStatus');
-            
-            if (music.paused) {
-                music.play().catch(error => {
-                    alert("សូមដាក់ចម្រៀងឈ្មោះ 'Voicy_Loud Moaning.mp3' ចូលក្នុង Folder សិន!");
-                });
-                icon.classList.remove('fa-play');
-                icon.classList.add('fa-pause');
-                status.innerText = "Playing...";
-            } else {
-                music.pause();
-                icon.classList.remove('fa-pause');
-                icon.classList.add('fa-play');
-                status.innerText = "Paused";
-            }
+            const m = document.getElementById('bgMusic');
+            const i = document.getElementById('playIcon');
+            if (m.paused) { m.play(); i.className = "fas fa-pause"; }
+            else { m.pause(); i.className = "fas fa-play"; }
         }
-        // Scroll to Top
-        const mybutton = document.getElementById("scrollTopBtn");
-        window.onscroll = function() {
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                mybutton.style.display = "block";
-            } else {
-                mybutton.style.display = "none";
-            }
-        };
-        function topFunction() {
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 0;
-        }
+        
+        function topFunction() { window.scrollTo({top: 0, behavior: 'smooth'}); }
 
-        // Initialize 3D Tilt
         if (typeof VanillaTilt !== 'undefined') {
-            VanillaTilt.init(document.querySelectorAll(".profile-card"), {
-                max: 15, // Reduced max tilt for better usability
-                speed: 400,
-                glare: true,
-                "max-glare": 0.3, // Reduced glare
-            });
-        }
-
-        // --- NEW: PREDICT CRUSH FUNCTION ---
-        function predictCrush(name) {
-            // បញ្ជីឈ្មោះ Crush បែបកំប្លែងៗ (អាចកែបានតាមចិត្ត)
-            const predictions = [
-                "អ្នកកំពុងមើយ☺️🙈🫵",
-                "ឆ្ងាយដូចជើងមេឃជិតនៅចំពោះមុខ🤭😘😘😘",
-                "អ្នកកំពុងតែអាន🤓🤓",
-                "សង្សារគេ (Sad) 😢",          
-            ];
-
-            // រើសយកមួយដោយចៃដន្យ
-            const result = predictions[Math.floor(Math.random() * predictions.length)];
-
-            // បង្ហាញលទ្ធផលដោយប្រើ SweetAlert2
-            Swal.fire({
-                title: `<span style="color: #e60073; font-family: 'Moul', cursive;">💘 Crush របស់ ${name} គឺ...</span>`,
-                html: `<h2 style="color: #333; font-family: 'Battambang', cursive;">${result}</h2>`,
-                imageUrl: 'https://media.tenor.com/On7kvXhzml4AAAAj/love-hearts.gif', // រូប GIF បេះដូង
-                imageWidth: 200,
-                imageHeight: 200,
-                imageAlt: 'Heart image',
-                background: '#fff url("https://www.transparenttextures.com/patterns/stardust.png")',
-                backdrop: `
-                    rgba(0,0,123,0.4)
-                    url("https://media.tenor.com/On7kvXhzml4AAAAi/loading-heart.gif")
-                    left top
-                    no-repeat
-                `,
-                confirmButtonText: 'Wow! 😱',
-                confirmButtonColor: '#e60073',
-                showClass: {
-                    popup: 'animate__animated animate__fadeInDown'
-                },
-                hideClass: {
-                    popup: 'animate__animated animate__fadeOutUp'
-                }
-            });
+             VanillaTilt.init(document.querySelectorAll(".profile-card"), { max: 15, speed: 400 });
         }
     </script>
 </body>
